@@ -1,8 +1,6 @@
 package main
 
 import "fmt"
-import "encoding/base64"
-import "crypto/sha512"
 import "flag"
 import "os"
 import "github.com/juju/utils"
@@ -19,7 +17,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if *salt != "" {
+	if *salt == "" {
 		fmt.Println(utils.AgentPasswordHash(*password))
 	} else {
 		fmt.Println(utils.UserPasswordHash(*password, *salt))
