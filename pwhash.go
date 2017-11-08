@@ -5,17 +5,12 @@ import "encoding/base64"
 import "crypto/sha512"
 import "flag"
 import "os"
-
-func AgentPasswordHash(password string) string {
-	sum := sha512.New()
-	sum.Write([]byte(password))
-	h := sum.Sum(nil)
-	return base64.StdEncoding.EncodeToString(h[:18])
-}
+import "github.com/juju/utils"
 
 func main() {
 
 	var password = flag.String("p", "", "Generate hash for this password (required).")
+	var salt = flag.String("s", "", "If provided, generate a user hash instead of machine hash using this salt for this password (optional).")
 
 	flag.Parse()
 
@@ -24,5 +19,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(AgentPasswordHash(*password))
+	if *salt != "" {
+		fmt.Println(utils.AgentPasswordHash(*password))
+	} else {
+		fmt.Println(utils.UserPasswordHash(*password, *salt))
+	}
 }
